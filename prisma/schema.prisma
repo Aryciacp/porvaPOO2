@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Usuario {
+  id    Int      @id @default(autoincrement())
+  nome  String
+  email String   @unique
+  lances Lance[]  @relation("CompradorLances")
+  leiloesDono Leilao[] @relation("DonoLeiloes")
+}
+
+model Lance {
+  id         Int      @id @default(autoincrement())
+  valor      Float
+  comprador  Usuario  @relation("CompradorLances", fields: [compradorId], references: [id])
+  compradorId Int
+  leilao     Leilao   @relation("LeilaoLances", fields: [leilaoId], references: [id])
+  leilaoId   Int
+}
+
+model Leilao {
+  id         Int      @id @default(autoincrement())
+  produto    String
+  preco      Float
+  dataLimite DateTime
+  dono       Usuario  @relation("DonoLeiloes", fields: [donoId], references: [id])
+  donoId     Int
+  listaDeLances Lance[] @relation("LeilaoLances")
+}
